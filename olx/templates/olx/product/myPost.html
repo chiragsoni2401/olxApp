@@ -1,0 +1,223 @@
+{% load static %}
+<html>
+    <head>
+            <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+       
+            <!------ Include the above in your HEAD tag ---------->
+            
+
+            <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
+  
+          
+          
+          
+          
+          
+              
+                    
+          
+              <link rel="stylesheet" href="{% static 'olx/css/create_product.css' %}">
+<style>
+
+      .sold_out {
+    top: 3.5em;
+    left: -2.5em;
+    color: #fff;
+    display: block;
+    position:absolute;
+    text-align: center;
+    text-decoration: none;
+    letter-spacing: .06em;
+    background-color: #A00;
+    /*padding: 0.5em 5em 0.4em 5em;*/
+    text-shadow: 0 0 0.75em #444;
+    box-shadow: 0 0 0.5em rgba(0,0,0,0.5);
+    font: bold 16px/1.2em Arial, Sans-Serif;
+    -webkit-text-shadow: 0 0 0.75em #444;
+    -webkit-box-shadow: 0 0 0.5em rgba(0,0,0,0.5);
+    -webkit-transform: rotate(-45deg) scale(0.75,1);
+    z-index:10;
+}
+.sold_out:before {
+    content: '';
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    margin: -0.3em -5em;
+    transform: scale(0.7);
+    -webkit-transform: scale(0.7);
+    border: 2px rgba(255,255,255,0.7) dashed;
+}
+   
+</style>
+  <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    </head>
+    <body>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+                    <div class="container">
+                      <a class="navbar-brand" href="{% url 'olx:product_list' %}">Softvision Olx</a>
+                      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                      </button>
+                      <div class="collapse navbar-collapse" id="navbarResponsive">
+                        <ul class="navbar-nav ml-auto">
+                          <li class="nav-item"  {% if '/olx/createProduct/' in request.path %} class="active"{% endif %}>
+                            <a class="nav-link" href="{% url 'olx:create_product' %}">Add Post
+                              <span class="sr-only">(current)</span>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="{% url "olx:my_all_post" %}">My Post
+                            </a>
+                          </li>
+                          <!--<li class="nav-item">
+                            <a class="nav-link" href="{% url "olx:logout_from_app" %}">Logout</a>
+                          </li>-->
+                          <li class="nav-item">
+                            <a class="nav-link" href="#">Services</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" id="contact" href="#">Contact</a>
+                          </li>&nbsp;&nbsp;
+                          
+                         
+                        </ul>
+                        
+                      </div>
+                    </div>
+                    <!--<form action="{% url "olx:product_list" %}" method="GET">
+                            <input type="text" placeholder="search..." name="q" value="{{ request.GET.q}}"/>
+                            <input type="submit" value="submit" />
+                           </form>-->
+                           <ul class="nav navbar-nav navbar-right">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        <span class="glyphicon glyphicon-user"></span> 
+                                        <strong>{{request.user.first_name}}</strong>
+                                        <span class="glyphicon glyphicon-chevron-down"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <div class="navbar-login">
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <p class="text-center">
+                                                            <span class="glyphicon glyphicon-user icon-size"></span>
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-lg-8">
+                                                        <p class="text-left"><strong>{{request.user.first_name}} {{request.user.last_name }}</strong></p>
+                                                        <p class="text-left small">{{request.user.username}}@softvision.com</p>
+                                                        <p class="text-left">
+                                                            <a href="#" class="btn btn-primary btn-block btn-sm">Profile</a>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li>
+                                            <div class="navbar-login navbar-login-session">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <p>
+                                                            <a href="{% url "olx:logout_from_app" %}" class="btn btn-danger btn-block">Logout</a>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                  </nav>
+<div class="container" id="tag_cloud">
+    
+    {% include "olx/product/myPostAjax.html" %}
+    <!--paginations-->
+    <div class="row">
+            <div class="col-md-12 col-lg-12">
+                         <nav aria-label="...">
+                             <ul class="pagination">
+                                     {% if productPagination %} 
+                                 <li class="page-item">
+                                     {% if productPagination.has_previous %}
+                                     <a href="?page=1">&laquo; first</a>
+                                     <a class="page-link" href="?page={{ productPagination.previous_page_number }}">Previous</a>
+                                     {% endif %}
+                                 </li>
+                                 <li class="page-item current"><a class="page-link" href="#">Page {{productPagination.number}} of {{productPagination.paginator.num_pages}}</a></li>
+                                <!-- <li class="page-item active">
+                                     <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                                 </li>
+                                 <li class="page-item"><a class="page-link" href="#">3</a></li>-->
+                                 <li class="page-item">
+                                         {% if productPagination.has_next %}
+                                         <a href="?page={{ productPagination.next_page_number }}">next</a>
+                                         <a href="?page={{ productPagination.paginator.num_pages }}">last &raquo;</a>
+                                     {% endif %}
+                                 </li>
+                                 
+                                 
+                                 {% endif %}
+                             </ul>
+                         </nav>
+            </div>     
+         </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+
+    //jquery for activating and deactivating products
+  $(document).on('click', ".actAndDeact", function () {
+
+    $this = $(this);
+        var photo_reference_id =$this.attr('data-id');
+    alert("photo_reference_id: " +photo_reference_id);
+    //ajax for activating and deactivating products
+    $.ajax({type: "GET",
+    url: "/olx/actAndDeact",
+    data:{
+      photo_reference_id:photo_reference_id
+    },
+    success: function(data){
+        console.log(data);
+        $("#tag_cloud").html(data);
+     
+   }
+    });
+  
+    
+});
+//jquery for making product as sold
+$(document).on('click', ".markSold", function () {
+    $this = $(this);
+        var mark_as_sold_id =$this.attr('data-id');
+    alert("Mark as sold mark_as_sold_id: " +mark_as_sold_id);
+    //ajax for activating and deactivating products
+    $.ajax({type: "GET",
+    url: "/olx/markAsSold",
+    data:{
+        mark_as_sold_id:mark_as_sold_id
+    },
+    success: function(data){
+        console.log(data);
+        $("#tag_cloud").html(data);
+     
+   }
+    });
+  
+    
+});
+
+});
+
+</script>
+
+</body>
+</html>

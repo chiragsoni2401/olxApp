@@ -1,0 +1,382 @@
+
+{% load static %}
+{% load thumbnail %}
+<!DOCTYPE html>
+<html>
+    <head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+       
+<!------ Include the above in your HEAD tag ---------->
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'olx/css/list_style.css' %}">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<title>
+{% block title %}
+{% if category %}{{category.name}}{% else %}Preeeeoducts{% endif %}
+{% endblock %}
+</title>
+<style>
+    .img {
+    position: relative;
+    float: left;
+    width:  100%;
+    height: 200px;
+    background-position: 50% 50%;
+    background-repeat:   no-repeat;
+    background-size:     cover;
+}
+</style>
+<style> 
+        input[type=text] {
+          width: 130px;
+          box-sizing: border-box;
+          border: 2px solid #ccc;
+          border-radius: 4px;
+          font-size: 16px;
+          background-color: white;
+          background-image: url('searchicon.png');
+          background-position: 10px 10px; 
+          background-repeat: no-repeat;
+          padding: 12px 20px 12px 40px;
+          -webkit-transition: width 0.4s ease-in-out;
+          transition: width 0.4s ease-in-out;
+         
+        }
+        
+        input[type=text]:focus {
+          width: 100%;
+        }
+    
+        .navbar-login
+{
+    width: 305px;
+    padding: 10px;
+    padding-bottom: 0px;
+}
+
+.navbar-login-session
+{
+    padding: 10px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+.icon-size
+{
+    font-size: 87px;
+}
+.zoom {
+    
+   
+    transition: transform .2s;
+    
+    margin: 0 auto;
+  }
+  
+  .zoom:hover {
+    -ms-transform: scale(1.0); /* IE 9 */
+    -webkit-transform: scale(1.0); /* Safari 3-8 */
+    transform: scale(1.2); 
+  }
+  .sold_out {
+    top: 3.5em;
+    left: -2.5em;
+    color: #fff;
+    display: block;
+    position:absolute;
+    text-align: center;
+    text-decoration: none;
+    letter-spacing: .06em;
+    background-color: #A00;
+    padding: 0.5em 5em 0.4em 5em;
+    text-shadow: 0 0 0.75em #444;
+    box-shadow: 0 0 0.5em rgba(0,0,0,0.5);
+    font: bold 16px/1.2em Arial, Sans-Serif;
+    -webkit-text-shadow: 0 0 0.75em #444;
+    -webkit-box-shadow: 0 0 0.5em rgba(0,0,0,0.5);
+    -webkit-transform: rotate(-45deg) scale(0.75,1);
+    z-index:10;
+}
+.sold_out:before {
+    content: '';
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    margin: -0.3em -5em;
+    transform: scale(0.7);
+    -webkit-transform: scale(0.7);
+    border: 2px rgba(255,255,255,0.7) dashed;
+}
+        </style>
+        <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+        <script>
+
+    
+    
+        </script>
+</head>
+<body onbeforeunload="HandleBackFunctionality()">
+
+   <!-- nav bar from here-->
+   <!--<nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">WebSiteName</a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+             <li {% if '/olx/createProduct' in request.path %} class="active"{% endif %}>
+                  <a href="{% url 'olx:create_product' %}">Post Add</a>
+                </li>
+                <li>
+            <form action="{% url "olx:product_list" %}" method="GET">
+                 <input type="text" placeholder="search products" name="q" value="{{ request.GET.q}}"/>
+                 <input type="submit" value="submit" />
+                </form></li>
+            <li>
+                 <a href="{% url "olx:logout_from_app" %}">Logout</a>
+                 </li>
+          </ul>
+        </div>
+      </nav>-->
+      <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="{% url "olx:product_list" %}">Softvision Olx</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item"  {% if '/olx/createProduct/' in request.path %} class="active"{% endif %}>
+                <a class="nav-link" href="{% url 'olx:create_product' %}">Add Post
+                  <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url "olx:my_all_post" %}">My Post
+                </a>
+              </li>
+              <!--<li class="nav-item">
+                <a class="nav-link" href="{% url "olx:logout_from_app" %}">Logout</a>
+              </li>-->
+              <li class="nav-item">
+                <a class="nav-link" href="#">Services</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="contact" href="#">Contact</a>
+              </li>&nbsp;&nbsp;
+              
+             
+            </ul>
+            
+          </div>
+        </div>
+        <form action="{% url "olx:product_list" %}" method="GET" style="margin-right: 5px;">
+                <input type="text" placeholder="search..." name="q" value="{{ request.GET.q}}"/>
+                <!--<input type="submit" value="submit" />-->
+               </form>
+               <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="white-space: nowrap;">
+                            <span class="glyphicon glyphicon-user"></span> 
+                            <strong>{{request.user.first_name}}</strong>
+                            <span class="glyphicon glyphicon-chevron-down"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <div class="navbar-login">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <p class="text-center">
+                                                <span class="glyphicon glyphicon-user icon-size"></span>
+                                            </p>
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <p class="text-left"><strong>{{request.user.first_name}} {{request.user.last_name }}</strong></p>
+                                            <p class="text-left small">{{request.user.username}}@softvision.com</p>
+                                            <p class="text-left">
+                                                <a href="#" class="btn btn-primary btn-block btn-sm">Profile</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <div class="navbar-login navbar-login-session">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <p>
+                                                <a href="{% url "olx:logout_from_app" %}" class="btn btn-danger btn-block">Logout</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+      </nav>
+    
+            
+      
+<div class="container">
+        
+    <div class="row">
+        
+        <div class="col-md-3">
+            <div class="card bg-light mb-3">
+
+                <div class="card-header bg-primary text-white text-uppercase"><i class="fa fa-list"></i> Categories</div>
+                <ul class="list-group category_block">
+                    <li class="list-group-item">
+					<a href="{% url "olx:product_list" %}">All</a><span class="badge">{{productPagination.paginator.count}}</li>
+					 {% for c,p in categoriesWithProductsCount %}
+                    <li class="list-group-item">
+					<a href="{{c.get_absolute_url}}">{{c.name}}</a><span class="badge">{{p}}</span></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+		<div class="col-md-9">
+            <div class="row">  
+                {% if productPagination %}          
+                    {% for product in productPagination %}
+                    
+                    {% if product.mark_as_sold %}
+
+                    <div class="col-md-4">
+                    <div class="card">
+                            <a class="sold_out" href="https://abc.com/">Sold out</a>
+                       {% if noItem %}
+                       <h1>{{ noItem }}</h1>
+                       {% endif %}
+                             
+                      
+                 
+                       <a  href="#" style="opacity: 0.2;">
+                            {% if product.photo__file %}
+
+                        <img class="img" src="/media/{{product.photo__file}}">
+
+                        {% else %}
+                        <img class="img" src="/media/photos/NoImage.jpg">
+
+                        {% endif %}    
+                    </a>
+                     
+                        
+                       
+                        <div class="card-body" style="opacity: 0.2;">
+                            <h4 class="card-title">{{product.name}}</h4>
+                            <p class="card-text">{{product.description}}</p>
+                            <div class="row">
+                                <div class="col">
+                                    <p class="btn btn-danger btn-block">{{product.price}} INR</p>
+                                </div>
+                                <div class="col">
+                                    <a href="#" class="btn btn-success btn-block">Contact Seller</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                {% else %}
+
+                <div class="col-md-4">
+                        <div class="card">
+                               
+                           {% if noItem %}
+                           <h1>{{ noItem }}</h1>
+                           {% endif %}
+                                 
+                          
+                     
+                           <a  href="{% url "olx:product_detail" product.id %}">
+                               {% if product.photo__file %}
+
+                            <img class="img" src="/media/{{product.photo__file}}">
+
+                            {% else %}
+                            <img class="img" src="/media/photos/NoImage.jpg">
+
+                            {% endif %}
+                            </a>
+                         
+                            
+                           
+                            <div class="card-body">
+                                <h4 class="card-title">{{product.name}}</h4>
+                                <p class="card-text">{{product.description}}</p>
+                                <div class="row">
+                                    <div class="col">
+                                        <p class="btn btn-danger btn-block">{{product.price}} INR</p>
+                                    </div>
+                                    <div class="col">
+                                        <a href="#" class="btn btn-success btn-block">Seller:{{ product.created_by }}&nbsp;&nbsp;<span class="glyphicon glyphicon-earphone"></span>:&nbsp;{{product.contact}}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                {% endif %}
+                    {% endfor %}
+                    {% else %}
+                    <h1>No Item found</h1>
+                    {% endif %}
+
+            </div>
+            <div class="row">
+               <div class="col-md-9">
+                            <nav aria-label="...">
+                                <ul class="pagination">
+                                        {% if productPagination %} 
+                                    <li class="page-item">
+                                        {% if productPagination.has_previous %}
+                                        <a href="?page=1">&laquo; first</a>
+                                        <a class="page-link" href="?page={{ productPagination.previous_page_number }}">Previous</a>
+                                        {% endif %}
+                                    </li>
+                                    <li class="page-item current"><a class="page-link" href="#">Page {{productPagination.number}} of {{productPagination.paginator.num_pages}}</a></li>
+                                   <!-- <li class="page-item active">
+                                        <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                                    </li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>-->
+                                    <li class="page-item">
+                                            {% if productPagination.has_next %}
+                                            <a href="?page={{ productPagination.next_page_number }}">next</a>
+                                            <a href="?page={{ productPagination.paginator.num_pages }}">last &raquo;</a>
+                                        {% endif %}
+                                    </li>
+                                    
+                                    
+                                    {% endif %}
+                                </ul>
+                            </nav>
+               </div>     
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+    $(document).on("click","#contact",function(){
+ alert("This webliste is under development you can cantact 'CHIRAG SONI' @ <chirag.soni@softvision.com>");
+});
+
+
+</script>
+
+</body>
+</html>

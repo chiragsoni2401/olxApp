@@ -1,0 +1,307 @@
+{% load bootstrap3 %} 
+{% bootstrap_messages %}
+{% load static %} 
+<!DOCTYPE html> 
+<html lang="en"> 
+
+<head > 
+
+	<title>Basic Form</title> 
+	
+	<meta charset="utf-8" /> 
+	
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'olx/css/create_product.css' %}">
+
+</script> 
+</script> 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+<script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<style>.state-icon {
+    left: -5px;
+}
+.list-group-item-primary {
+    color: rgb(255, 255, 255);
+    background-color: rgb(66, 139, 202);
+}
+
+/* DEMO ONLY - REMOVES UNWANTED MARGIN */
+.well .list-group {
+    margin-bottom: 0px;
+}
+    
+</style>
+</head> 
+
+<body style="background-color: #f5f7f8 !important;"> 
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+                <div class="container">
+                  <a class="navbar-brand" href="{% url 'olx:product_list' %}">Softvision Olx</a>
+                  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+                  <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto">
+                      <li class="nav-item"  {% if '/olx/createProduct/' in request.path %} class="active"{% endif %}>
+                        <a class="nav-link" href="{% url 'olx:create_product' %}">Add Post
+                          <span class="sr-only">(current)</span>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url "olx:my_all_post" %}">My Post
+                        </a>
+                      </li>
+                      <!--<li class="nav-item">
+                        <a class="nav-link" href="{% url "olx:logout_from_app" %}">Logout</a>
+                      </li>-->
+                      <li class="nav-item">
+                        <a class="nav-link" href="#">Services</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" id="contact" href="#">Contact</a>
+                      </li>&nbsp;&nbsp;
+                      
+                     
+                    </ul>
+                    
+                  </div>
+                </div>
+                <!--<form action="{% url "olx:product_list" %}" method="GET">
+                        <input type="text" placeholder="search..." name="q" value="{{ request.GET.q}}"/>
+                        <input type="submit" value="submit" />
+                       </form>-->
+                       <ul class="nav navbar-nav navbar-right">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <span class="glyphicon glyphicon-user"></span> 
+                                    <strong>{{request.user.first_name}}</strong>
+                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <div class="navbar-login">
+                                            <div class="row">
+                                                <div class="col-lg-4">
+                                                    <p class="text-center">
+                                                        <span class="glyphicon glyphicon-user icon-size"></span>
+                                                    </p>
+                                                </div>
+                                                <div class="col-lg-8">
+                                                    <p class="text-left"><strong>{{request.user.first_name}} {{request.user.last_name }}</strong></p>
+                                                    <p class="text-left small">{{request.user.username}}@softvision.com</p>
+                                                    <p class="text-left">
+                                                        <a href="#" class="btn btn-primary btn-block btn-sm">Profile</a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <div class="navbar-login navbar-login-session">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <p>
+                                                        <a href="{% url "olx:logout_from_app" %}" class="btn btn-danger btn-block">Logout</a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+              </nav>
+	<div class="container"> 
+	<div class="row"> 
+		<div class="col-md-6"> 
+        <h2>Edit Product</h2> 
+        
+			<form action="" method="post"><input type='hidden' name="product_id" value="{{ request.path }}" id="id_id"/> 
+			{%csrf_token %} 
+
+				{% bootstrap_form form %} 
+<!-This is the form variable which we are passing from the function 
+of home in views.py file. That's the beauty of Django we 
+don't need to write much codes in this it'll automatically pass 
+all the form details in here 
+->  
+<input type="hidden" id="setCoverPhoto" name="photoSelected" value="">
+			<div class="form-group"> 
+				<button type="submit" class="btn btn-success" id="finalSave"> 
+				Save 
+                </button> &nbsp;
+                <button onclick="{% url "olx:my_all_post" %}" class="btn btn-danger">Cancel</button>
+
+				</div> 
+
+                </form> 
+               <!-- {% for photo in photo_list %}
+                <img src="{{photo.file.url }}">
+                {% endfor %}-->
+        </div> 
+        <div class="col-md-6" style="margin-top:88px;">
+                <p id="invalidFile" style="color: red;"></p>
+
+            <div class="">
+               
+                <div class="well" style="overflow: auto;">
+                        <form action="{% url 'olx:delete_photo_from_edit' %}" method="GET">
+                    <ul id="check-list-box" class="list-group">
+                            {% for photo in photo_list %}
+                            <li class="list-group-item">
+                                    <input type="checkbox" name="imageName" value="{{ photo.id }}">
+                                    {% if photo.cover_photo_flag == 'yes'%}
+                                    <span style="float:right;"><input type="radio" checked='checked' name="materialExampleRadios" value="{{ photo.id }}">&nbsp;Mark as cover photo</span>
+                                    {% else %}
+                                    <span style="float:right;"><input type="radio" name="materialExampleRadios" value="{{ photo.id }}">&nbsp;Mark as cover photo</span>
+
+                                    {% endif %}
+                                <a class="" href="#"> 
+
+                                  <img class="media-object" src="{{photo.file.url}}" style="width: 72px; height: 72px;"> </a>
+                                   </li>
+                    
+
+                      {% endfor %}
+                      {% if not photo_list%}
+                      <h4>No images were uploaded for this product</h4>
+                      {% endif %}
+
+                     
+                    </ul>
+                    <br />
+                   
+                        	{%csrf_token %} 
+                            <button type="button" class="btn btn-danger delete" id="deletePhoto">
+                                <span class="glyphicon glyphicon-remove"></span> Delete
+                            </button></form>
+                    
+                </div>
+                 <div style="margin-bottom: 20px;">
+    
+    <button type="button" class="btn btn-primary js-upload-photos">
+      <span class="glyphicon glyphicon-cloud-upload"></span> Upload photos
+    </button>
+    <input id="fileupload" type="file" name="file" multiple accept="image/,.jpeg,.png,.jpg,.gif"
+           style="display: none;"
+           data-url="{% url 'olx:progress_bar_upload' %}"
+           data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+  </div>
+            </div>
+        </div>
+	</div> 
+</div> 
+<!--progress bar modal starts here-->
+<div class="modal fade" id="modal-progress" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Uploading...</h4>
+        </div>
+        <div class="modal-body">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!--ends here-->
+<script>
+    $(function () {
+    $('.list-group.checked-list-box .list-group-item').each(function () {
+        
+        // Settings
+        var $widget = $(this),
+            $checkbox = $('<input type="checkbox" class="hidden" />'),
+            color = ($widget.data('color') ? $widget.data('color') : "primary"),
+            style = ($widget.data('style') == "button" ? "btn-" : "list-group-item-"),
+            settings = {
+                on: {
+                    icon: 'glyphicon glyphicon-check'
+                },
+                off: {
+                    icon: 'glyphicon glyphicon-unchecked'
+                }
+            };
+            
+        $widget.css('cursor', 'pointer')
+        $widget.append($checkbox);
+
+        // Event Handlers
+        $widget.on('click', function () {
+            $checkbox.prop('checked', !$checkbox.is(':checked'));
+            $checkbox.triggerHandler('change');
+            updateDisplay();
+        });
+        $checkbox.on('change', function () {
+            updateDisplay();
+        });
+          
+
+        // Actions
+        function updateDisplay() {
+            var isChecked = $checkbox.is(':checked');
+
+            // Set the button's state
+            $widget.data('state', (isChecked) ? "on" : "off");
+
+            // Set the button's icon
+            $widget.find('.state-icon')
+                .removeClass()
+                .addClass('state-icon ' + settings[$widget.data('state')].icon);
+
+            // Update the button's color
+            if (isChecked) {
+                $widget.addClass(style + color + ' active');
+            } else {
+                $widget.removeClass(style + color + ' active');
+            }
+        }
+
+        // Initialization
+        function init() {
+            
+            if ($widget.data('checked') == true) {
+                $checkbox.prop('checked', !$checkbox.is(':checked'));
+            }
+            
+            updateDisplay();
+
+            // Inject the icon if applicable
+            if ($widget.find('.state-icon').length == 0) {
+                $widget.prepend('<span class="state-icon ' + settings[$widget.data('state')].icon + '"></span>');
+            }
+        }
+        init();
+    });
+    
+    $('#get-checked-data').on('click', function(event) {
+        event.preventDefault(); 
+        var checkedItems = {}, counter = 0;
+        $("#check-list-box li.active").each(function(idx, li) {
+            checkedItems[counter] = $(li).text();
+            counter++;
+        });
+        $('#display-json').html(JSON.stringify(checkedItems, null, '\t'));
+    });
+});
+</script>
+{# JQUERY FILE UPLOAD SCRIPTS #}
+<script src="{% static 'js/jquery-file-upload/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/jquery.fileupload.js' %}"></script>
+
+{# PHOTOS PAGE SCRIPTS #}
+<script src="{% static 'olx/js/progress-bar-upload.js' %}"></script>
+<script type="text/javascript">
+    var path ="{{request.path}}"
+    </script>
+</body> 
+
+</html> 

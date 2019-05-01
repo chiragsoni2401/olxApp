@@ -1,0 +1,129 @@
+<div class="row">
+        <div class="col-sm-12 col-md-10 col-md-offset-1">
+            <h1>My Posts</h1>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                       
+                        <th class="text-center">Price</th>
+                        
+                        <th> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                        {% if productPagination %}          
+                        {% for product in productPagination %}
+
+                    <tr>
+                            {% if product.mark_as_sold %}
+
+                        <td class="col-sm-8 col-md-6">
+                        <div class="media">
+                            <h1></h1>
+                                <a class="sold_out" href="https://abc.com/" style="margin-left:1.5em;margin-top: -2.5em;">Sold out</a>
+
+                            <a class="thumbnail pull-left" href="#"> 
+                                    {% if product.photo__file %}
+
+                                <img class="media-object" src="/media/{{product.photo__file}}" style="opacity:0.2;width: 72px; height: 72px;">
+
+                                {% else %}
+                                <img class="media-object" src="/media/photos/NoImage.jpg" style="width: 72px; height: 72px;"> 
+                                {% endif %}
+                            </a>
+                            <div class="media-body">
+                                <h4 class="media-heading"><a href="#">{{ product.name }}</a></h4>
+                                <h5 class="media-heading"> posted by <a href="#">{{ product.created_by }}</a></h5>
+                                <!--{% if not product.status %}
+                                <span>Status: </span><span class="text-success"><strong>Active</strong></span>
+                                {% else %}
+                                <span>Status: </span><span class="text-danger"><strong>Inactive</strong></span>
+                                {% endif %}-->
+                            </div>
+                        </div></td>
+                        {% else %}
+                        <td class="col-sm-8 col-md-6">
+                                <div class="media">
+        
+                                    <a class="thumbnail pull-left" href="#"> 
+                                        {% if product.photo__file %}
+                                        <img class="media-object" src="/media/{{product.photo__file}}" style="width: 72px; height: 72px;"> 
+                                        {% else %}
+                                        <img class="media-object" src="/media/photos/NoImage.jpg" style="width: 72px; height: 72px;"> 
+                                        {% endif %}
+                                    </a>
+
+                                        <div class="media-body">
+                                        <h4 class="media-heading"><a href="#">{{ product.name }}</a></h4>
+                                        <h5 class="media-heading"> posted by <a href="#">{{ product.created_by }}</a></h5>
+                                        {% if not product.status %}
+                                        <span>Status: </span><span class="text-success"><strong>Active</strong></span>
+                                        {% else %}
+                                        <span>Status: </span><span class="text-danger"><strong>Inactive</strong></span>
+                                        {% endif %}
+                                    </div>
+                                </div></td>
+                        {% endif %}
+                       
+                       
+                        <td class="col-sm-2 col-md-2 text-center"><strong>{{ product.price }} INR</strong></td>
+                        <td class="col-sm-1 col-md-1">
+                                {% if not product.status %}
+                                {% if product.mark_as_sold %}
+                        <button type="button" class="btn btn-danger actAndDeact" data-id="{{ product.id }}" disabled="true">
+                            <span class="glyphicon glyphicon-remove"></span> Deactivate
+                        </button>
+                        {% else %}
+                        <button type="button" class="btn btn-danger actAndDeact" data-id="{{ product.id }}">
+                                <span class="glyphicon glyphicon-remove"></span> Deactivate
+                            </button>
+                        {% endif %}
+
+                        {% else %}
+
+                             {% if product.mark_as_sold %}
+                        <button type="button" class="btn btn-success actAndDeact" data-id="{{ product.id }}" disabled="true">
+                            <span class="glyphicon glyphicon-ok"></span> Activate
+                        </button>
+                        {% else %}
+                        <button type="button" class="btn btn-success actAndDeact" data-id="{{ product.id }}">
+                                <span class="glyphicon glyphicon-ok"></span> Activate
+                            </button>
+                        {% endif %}                       
+                            {% endif %}
+                    </td>
+                        <td class="col-sm-1 col-md-1">
+                            <form action = "{% url "olx:edit_product" product.id %}">
+                                    {% if product.mark_as_sold or product.status %}
+                                <button type="submit" class="btn btn-primary" disabled="true">
+                                    <span class="glyphicon glyphicon-pencil"></span> Edit
+                                </button>
+                                {% else %}
+                                <button type="submit" class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-pencil"></span> Edit
+                                    </button>
+                                {% endif %}     
+                            </form></td>
+                                <td class="col-sm-1 col-md-1">
+                                        {% if product.mark_as_sold or product.status %}
+                                        <button type="button" class="btn btn-success markSold" data-id="{{ product.id }}" disabled="true">
+                                            <span class="glyphicon glyphicon-ok"></span> Mark as sold
+                                        </button>
+                                        {% else %}
+                                        <button type="button" class="btn btn-success markSold" data-id="{{ product.id }}">
+                                                <span class="glyphicon glyphicon-ok"></span> Mark as sold
+                                            </button>
+                                            {% endif %}     
+
+                                    </td>
+                    </tr>
+
+                    {% endfor %}
+                    {% else %}
+                    <h1>No Item found</h1>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
