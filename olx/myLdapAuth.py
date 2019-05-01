@@ -45,7 +45,7 @@ class MyLdapAuth:
         Returns None on success or a string describing the error on failure
         # Adapt to your needs
         """
-       LDAP_SERVER = 'LDAP://10.100.1.100:389'
+       LDAP_SERVER = 'your ldap server'
        # fully qualified AD user name
        LDAP_USERNAME = '%s@spi.com' % username
        # your password
