@@ -2,6 +2,8 @@
 # import the User object
 from django.contrib.auth.models import User
 import ldap
+import urllib.request as url
+import json
 #from .views import verifyLogin
 #Note: I am using django provided User model but in real project create a custom model
 class MyLdapAuth:
@@ -11,6 +13,10 @@ class MyLdapAuth:
         print('inside authentication'+str(request.user.username))
        
         if MyLdapAuth.verifyLogin(username, password) != 'success':
+            list=username.split('.')
+            response = url.urlopen("https://project.softvision.com/operaservice/api/employee?key=mvk4s5jfcUi948EbtAY7Ag&email="+str(list[0])+"."+str(list[1]))
+            jsonData = json.load(response)
+            print(jsonData)
             try:
                 user = User.objects.get(username=username)
                 #user.last_login=
@@ -18,7 +24,7 @@ class MyLdapAuth:
             except User.DoesNotExist:
                 # Create a new user. There's no need to set a password
                 # because only the password from settings.py is checked.
-                list=username.split('.')
+                
                 user = User(username=username,first_name=list[0],last_name=list[1],email=username+str('@softvision.com'))
                 #user.is_staff = True
                 #user.is_superuser = True
@@ -45,7 +51,8 @@ class MyLdapAuth:
         Returns None on success or a string describing the error on failure
         # Adapt to your needs
         """
-       LDAP_SERVER = 'your ldap server'
+
+       LDAP_SERVER = 'LDAP://10.100.1.100:389'
        # fully qualified AD user name
        LDAP_USERNAME = '%s@spi.com' % username
        # your password

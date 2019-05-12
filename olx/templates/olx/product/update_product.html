@@ -58,11 +58,11 @@
                       <!--<li class="nav-item">
                         <a class="nav-link" href="{% url "olx:logout_from_app" %}">Logout</a>
                       </li>-->
-                      <li class="nav-item">
+                     <!-- <li class="nav-item">
                         <a class="nav-link" href="#">Services</a>
-                      </li>
+                      </li>-->
                       <li class="nav-item">
-                        <a class="nav-link" id="contact" href="#">Contact</a>
+                        <a class="nav-link" id="contact" href="#">Contact Admin</a>
                       </li>&nbsp;&nbsp;
                       
                      
@@ -153,7 +153,7 @@ all the form details in here
                         <form action="{% url 'olx:delete_photo_from_edit' %}" method="GET">
                     <ul id="check-list-box" class="list-group">
                             {% for photo in photo_list %}
-                            <li class="list-group-item">
+                            <li class="list-group-item" style="display: inline;">
                                     <input type="checkbox" name="imageName" value="{{ photo.id }}">
                                     {% if photo.cover_photo_flag == 'yes'%}
                                     <span style="float:right;"><input type="radio" checked='checked' name="materialExampleRadios" value="{{ photo.id }}">&nbsp;Mark as cover photo</span>
@@ -161,9 +161,8 @@ all the form details in here
                                     <span style="float:right;"><input type="radio" name="materialExampleRadios" value="{{ photo.id }}">&nbsp;Mark as cover photo</span>
 
                                     {% endif %}
-                                <a class="" href="#"> 
-
-                                  <img class="media-object" src="{{photo.file.url}}" style="width: 72px; height: 72px;"> </a>
+                                <p class="" href="#"> 
+                                  <img class="media-object" src="{{photo.file.url}}" style="width: 72px; height: 72px;"> </p>
                                    </li>
                     
 
@@ -187,7 +186,7 @@ all the form details in here
     <button type="button" class="btn btn-primary js-upload-photos">
       <span class="glyphicon glyphicon-cloud-upload"></span> Upload photos
     </button>
-    <input id="fileupload" type="file" name="file" multiple accept="image/,.jpeg,.png,.jpg,.gif"
+    <input id="fileupload" type="file" name="file" multiple accept="image/*"
            style="display: none;"
            data-url="{% url 'olx:progress_bar_upload' %}"
            data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
@@ -298,9 +297,17 @@ all the form details in here
 <script src="{% static 'js/jquery-file-upload/jquery.fileupload.js' %}"></script>
 
 {# PHOTOS PAGE SCRIPTS #}
-<script src="{% static 'olx/js/progress-bar-upload.js' %}"></script>
 <script type="text/javascript">
-    var path ="{{request.path}}"
+var path ="{{request.path}}"
+</script>
+<script src="{% static 'olx/js/progress-bar-upload.js' %}"></script>
+<script>
+
+        $(document).on("click","#contact",function(){
+     alert("This webliste is under development you can cantact 'CHIRAG SONI' @ <chirag.soni@softvision.com>");
+    });
+    
+    
     </script>
 </body> 
 

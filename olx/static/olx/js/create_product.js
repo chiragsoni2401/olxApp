@@ -17,7 +17,12 @@ function validateForm() {
     } else if (c == null || c == "") {
         alert("Please Enter description");
         return false;
-    } else if (d == null || d == "" || d < 0) {
+    }
+    else if(c.length <10){
+     alert("Description Should Contain minimum 10 characters");
+     return false;
+    }
+    else if (d == null || d == "" || d < 0) {
         if (d < 0) {
             alert("Price should not be negative");
 
@@ -38,7 +43,7 @@ function validateForm() {
         return false;
     }
     if ($('#gallery tbody').children().length == 0) {
-        alert(222);
+        
         return confirm("Do you want to continue without uploading photo?");
     }
 

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sorl.thumbnail',
     'bootstrap3',
+   
 ]
 
 MIDDLEWARE = [
@@ -55,6 +56,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'olxApp.urls'
 
+EMAIL_HOST='spimail.spi.com'
+EMAIL_PORT ='587'
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER ='chirag.soni@softvision.com'
+EMAIL_HOST_PASSWORD='vad2@nd**gj'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

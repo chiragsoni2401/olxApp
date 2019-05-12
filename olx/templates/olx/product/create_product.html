@@ -2,6 +2,8 @@
 {% load bootstrap3 %} 
 {% bootstrap_messages %}
 {% load static %} 
+
+  
 <!--<!doctype html>
 <html lang="en">
     
@@ -48,11 +50,11 @@
                       <!--<li class="nav-item">
                         <a class="nav-link" href="{% url "olx:logout_from_app" %}">Logout</a>
                       </li>-->
-                      <li class="nav-item">
+                      <!--<li class="nav-item">
                         <a class="nav-link" href="#">Services</a>
-                      </li>
+                      </li>-->
                       <li class="nav-item">
-                        <a class="nav-link" id="contact" href="#">Contact</a>
+                        <a class="nav-link" id="contact" href="#">Contact Admin</a>
                       </li>&nbsp;&nbsp;
                       
                      
@@ -172,6 +174,7 @@
                                                     {% endfor %}-->
                                                   </tbody>
                                                 </table>
+
                                                 <input type="hidden" id="upl_photo_id" value="">
                                                  <table>
                                                      <tr>
@@ -226,7 +229,6 @@
 
 
 
-
 {% block javascript %}
 <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
@@ -236,38 +238,72 @@
   <script src="{% static 'js/jquery-file-upload/jquery.fileupload.js' %}"></script>
   <script src="{% static 'olx/js/create_product.js' %}"></script>
   {# PHOTOS PAGE SCRIPTS #}
+  <script>
+  var deleteClicked=false;
+  </script>
   <script src="{% static 'olx/js/progress-bar-upload.js' %}"></script>
+  <script>
+        $(document).ready(function () {
+           
+      
+             history.pushState({}, '');
+         if (window.history && window.history.pushState) {
+     
+             $(window).on('popstate', function () {//when back is clicked popstate event executes
+                var photoId=document.getElementById("upl_photo_id").value;
+                 //alert("deleteClicked:::"+deleteClicked);
+                 if(!deleteClicked){
+                     alert("Rajesh");
+                 
+                // alert("photoId:::"+photoId);
+                 if(photoId != ''){
+                  
+                    $.ajax({type: "GET",
+             url: "/olx/deletePhoto",
+             data:{
+               photo_id:photoId
+             },
+             success: function(){
+               //alert("removed");
+               window.history.back();
+             }
+             });
+                 }
+                 else{
+                     console.log("back");
+                     window.history.back();
+                 }
+               
+     
+                 
+                 }
+                 else{
+                     console.log("back1");
+                     
+                 }
 
-<script>
-   $(document).ready(function () {
-       
- history.pushState({}, '');
-    if (window.history && window.history.pushState) {
-
-        $(window).on('popstate', function () {//when back is clicked popstate event executes
-
-            alert("Rajesh");
-            var photoId=document.getElementById("upl_photo_id").value;
-            $.ajax({type: "GET",
-        url: "/olx/deletePhoto",
-        data:{
-          photo_id:photoId
-        },
-        success: function(){
-          alert("removed");
-        }
-        });
-
-            window.history.back();
-        });
-    }
-})
-
-
-
-</script>
+                 
+                 
+             });
+         }
+         
+      
+     })
+     
+     
+     
+     </script>
 <script type="text/javascript">
     var path ="{{request.path}}"
+    </script>
+    <script>
+
+        $(document).on("click","#contact",function(){
+     alert("This webliste is under development you can cantact 'CHIRAG SONI' @ <chirag.soni@softvision.com>");
+    return false;
+    });
+    
+    
     </script>
 {% endblock %}
 

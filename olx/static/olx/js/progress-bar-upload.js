@@ -1,5 +1,6 @@
-$(function () {
 
+$(function () {
+ 
     $(".js-upload-photos").click(function () {
       $("#fileupload").click();
     });
@@ -53,6 +54,8 @@ $(function () {
             data.result.info
           )
         }
+ 
+       
         //IE:For IE includes doesn't work just indexOf works
         var isIE = /*@cc_on!@*/false || !!document.documentMode;
       if(isIE){
@@ -67,17 +70,19 @@ $(function () {
 
         }
       }
-       
+        
         
       }
     });
-   
+  
     $("#gallery").on("click",".deleteUploadedPic",function(){
         // Actual delete action goes here.
         $this = $(this);
         var photoId =$this.attr('data-id');
         
         alert('deleteing...'+photoId);
+        
+        deleteClicked=true;
         $.ajax({type: "GET",
         url: "/olx/deletePhoto",
         data:{
@@ -109,6 +114,10 @@ $(function () {
        alert(document.getElementById("setCoverPhoto").value);
 
    }
+   else{
+     alert("Select your cover photo");
+     return false;
+   }
    alert(555);
    return confirm("Confirm your cover photo");
  
@@ -128,7 +137,8 @@ $(function () {
     var product_id =  product_id_arr[2];
     $("#id_id").val(product_id);
      alert("product_id::"+product_id);
-    //ajax for deleting the multiple selelcted photos
+     if(confirm("Are you sure to delete photos?")){
+      //ajax for deleting the multiple selelcted photos
     $.ajax({type: "GET",
     url: "/olx/deletePhotoFromEdit",
     data:{
@@ -142,6 +152,11 @@ $(function () {
 
    }
     });
+     }
+     else{
+       
+     }
+    
     
 });
 

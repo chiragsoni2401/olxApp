@@ -23,7 +23,7 @@
                             <h1></h1>
                                 <a class="sold_out" href="https://abc.com/" style="margin-left:1.5em;margin-top: -2.5em;">Sold out</a>
 
-                            <a class="thumbnail pull-left" href="#"> 
+                            <p class="thumbnail pull-left" href="#"> 
                                     {% if product.photo__file %}
 
                                 <img class="media-object" src="/media/{{product.photo__file}}" style="opacity:0.2;width: 72px; height: 72px;">
@@ -31,10 +31,10 @@
                                 {% else %}
                                 <img class="media-object" src="/media/photos/NoImage.jpg" style="width: 72px; height: 72px;"> 
                                 {% endif %}
-                            </a>
+                            </p>
                             <div class="media-body">
-                                <h4 class="media-heading"><a href="#">{{ product.name }}</a></h4>
-                                <h5 class="media-heading"> posted by <a href="#">{{ product.created_by }}</a></h5>
+                                <h4 class="media-heading">{{ product.name }}</h4>
+                                <h5 class="media-heading"> posted by:&nbsp;{{ product.created_by }}</h5>
                                 <!--{% if not product.status %}
                                 <span>Status: </span><span class="text-success"><strong>Active</strong></span>
                                 {% else %}
@@ -46,17 +46,17 @@
                         <td class="col-sm-8 col-md-6">
                                 <div class="media">
         
-                                    <a class="thumbnail pull-left" href="#"> 
+                                    <p class="thumbnail pull-left" href="#"> 
                                         {% if product.photo__file %}
                                         <img class="media-object" src="/media/{{product.photo__file}}" style="width: 72px; height: 72px;"> 
                                         {% else %}
                                         <img class="media-object" src="/media/photos/NoImage.jpg" style="width: 72px; height: 72px;"> 
                                         {% endif %}
-                                    </a>
+                                    </p>
 
                                         <div class="media-body">
-                                        <h4 class="media-heading"><a href="#">{{ product.name }}</a></h4>
-                                        <h5 class="media-heading"> posted by <a href="#">{{ product.created_by }}</a></h5>
+                                        <h4 class="media-heading">{{ product.name }}</h4>
+                                        <h5 class="media-heading"> posted by:&nbsp; {{ product.created_by }}</h5>
                                         {% if not product.status %}
                                         <span>Status: </span><span class="text-success"><strong>Active</strong></span>
                                         {% else %}
@@ -106,14 +106,21 @@
                                 {% endif %}     
                             </form></td>
                                 <td class="col-sm-1 col-md-1">
-                                        {% if product.mark_as_sold or product.status %}
+                                        {% if product.status %}
                                         <button type="button" class="btn btn-success markSold" data-id="{{ product.id }}" disabled="true">
                                             <span class="glyphicon glyphicon-ok"></span> Mark as sold
                                         </button>
                                         {% else %}
+                                        {% if  product.mark_as_sold %}
+                                        <button type="button" class="btn btn-danger markSold" data-id="{{ product.id }}">
+                                            <span class="glyphicon glyphicon-ok"></span> Mark as unsold
+                                        </button>
+                                        {% else %}
+
                                         <button type="button" class="btn btn-success markSold" data-id="{{ product.id }}">
                                                 <span class="glyphicon glyphicon-ok"></span> Mark as sold
                                             </button>
+                                            {% endif %}
                                             {% endif %}     
 
                                     </td>

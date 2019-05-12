@@ -19,6 +19,13 @@ from PIL import Image
 from django.views.generic.edit import UpdateView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
+import os
+from django.core.mail import EmailMultiAlternatives
+
+from django.template.loader import get_template
+from django.template import Context
 # Create your views here.
 
 def product_list(request, category_slug=None):
@@ -40,7 +47,10 @@ def product_detail(request,id):
 
 #view for creating the new product
 def create_new_product(request):
+    print('iiinside save_new_product and current user is:'+str(request.user.username))
+    print('session age:'+str(request.session.get_expiry_age()))
     if request.user.is_authenticated:
+       print('inside is_authenticated::'+str(request.user.username))
        return create_product_fn(request)
     else:
        print('session expired') 
@@ -63,35 +73,49 @@ def saveProductAndPhoto(request):
              photo = Photo.objects.create(reference_id=product,photo_type=item.photo_type,uploaded_at=item.uploaded_at,file=item.file,uploaded_by_id = item.uploaded_by_id)
 
           photo.save()
-        
+      
+      #calling sendEmail fn
+      photoCount=Photo.objects.all().filter(reference_id_id=product).count()
+      sendEmail(request,product,photoCount)
       PhotoTemp.objects.filter(uploaded_by_id=request.user.id).delete()
+      
       request.session['product_and_photo_saved'] = True
       ProgressBarUploadView.cover_photo = True
+      
       return HttpResponseRedirect(reverse('olx:thank_you'))
+
 def thank_you(request):
     if request.user.is_authenticated:
-          return render(request, 'olx/thankyou.html') 
+       if request.session['product_details_entered'] == False:
+          return create_product_fn(request)
+         
+       return render(request, 'olx/thankyou.html') 
     else:
-          return render(request, 'olx/login.html')     
+       print('session expired') 
+       return render(request, 'olx/login.html')    
 #view for saving the new product from user side
 def  save_new_product(request):
  if request.user.is_authenticated:
+       print("sd::"+str(request.session['create_product']))     
        
        # If after uploading the images user will refresh the upload page,his photos will be deleted
   
-
+       request.session['product_details_entered'] = False
        formToSave = ProductForm(request.POST,request.FILES)
        if formToSave.is_valid():
          product = formToSave.save(commit=False)
          user = request.user
          full_name=request.user.first_name+' '+request.user.last_name
+         print(full_name+str(full_name))
          product.created_by=full_name
          product.uploaded_by_id=request.user.id
          request.session['product_and_photo_saved'] = False
        
          product.save() # Instead of saving it store it in session and save when user clicks on add post
-         return saveProductAndPhoto(request)
          request.session['product_details_entered'] = True
+         
+         return saveProductAndPhoto(request)
+         
             
        else:
           if request.session['product_details_entered'] == False: 
@@ -112,12 +136,19 @@ def createProductPagination(request,products=None,photos=None):
         page = request.GET.get('page')
         return paginator.get_page(page)
 def create_product_fn(request,info=None):
+     print("hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
      if request.session['user_has_uploaded_photo'] == True:
-         PhotoTemp.objects.filter(uploaded_by_id=request.user.id).delete()
+         photoTemp = PhotoTemp.objects.filter(uploaded_by_id=request.user.id)
+         for item in photoTemp:
+             path = item.file.path
+             item.delete()
+             os.remove(path)
+
     
      form = ProductForm()   
      return render(request, 'olx/product/create_product.html', {'form': form,'info':info})
 def product_list_fn(request,category_slug=None):
+    
       category = None
       abc = 'hello'
       productPagination = ''
@@ -149,6 +180,9 @@ def product_list_fn(request,category_slug=None):
 
         productPagination = createProductPagination(request,prodphoto)
       
+      
+      otp = get_random_string(6, allowed_chars='0123456789')      
+      print("otp::::"+str(otp))  
       return render(request,'olx/product/list.html',{'category':category,'categoriesWithProductsCount':categoriesWithProductsCount,'productPagination':productPagination,'noItem':noItem})     
  #============================================================================================================       
 
@@ -185,6 +219,8 @@ class ProgressBarUploadView(View):
                   #logic for fetchng last record id
                   last_record = PhotoTemp.objects.first()
                   print("last_record.id:::"+str(last_record.id))
+                  print('url::'+str(photoTemp.file.url))
+                  #print('info-------->'+info)
                   data = {'is_valid': True,'id':last_record.id, 'name': photoTemp.file.name, 'url': photoTemp.file.url}
                 
         else:
@@ -197,8 +233,14 @@ def deleteUploadedPhoto(request):
            try:
               photo_id = request.GET['photo_id']
               print('photo_id::'+str(photo_id))
-              PhotoTemp.objects.filter(id=photo_id,uploaded_by_id=request.user.id).delete()
-              return HttpResponse("success")
+              if photo_id:
+                 if PhotoTemp.objects.filter(id=photo_id,uploaded_by_id=request.user.id).exists():
+                    photo=PhotoTemp.objects.filter(id=photo_id,uploaded_by_id=request.user.id)[0]
+                    path=photo.file.path
+                    photo.delete()
+                    os.remove(path)
+                    return HttpResponse("success")
+              return HttpResponse("No photos") 
            except ConnectionAbortedError:
               print("exception raised")    
        elif request.path == '/olx/deletePhotoFromEdit/':#when deleted from edit product screen
@@ -211,14 +253,18 @@ def deleteUploadedPhoto(request):
                 if '-uploaded' not in photoId: 
                     photo = Photo.objects.filter(id=photoId,uploaded_by_id=request.user.id)
                     if photo:
+                       path=photo[0].file.path 
                        photo.delete()
+                       os.remove(path)
                 else:
                     print("delting from photoTemp table")
                     photoId_extr = photoId.split('-')[0]
                     photoTemp = PhotoTemp.objects.filter(id=int(photoId_extr),uploaded_by_id=request.user.id)    
                     if photoTemp:
+                        path=photoTemp[0].file.path
                         photoTemp.delete()
-                 
+                        os.remove(path)
+
             return HttpResponse("success")
     else:
 
@@ -227,7 +273,7 @@ def myPost(request):
     productPagination = myPostData(request)#createProductPagination(request,products,photos)
     return render(request,'olx/product/myPost.html',{'productPagination':productPagination})    
 def myPostData(request):
-    prodphoto = Product.objects.filter(Q(photo__cover_photo_flag='yes')|Q(photo__file=None)).distinct().prefetch_related('photo__set').values('id','name','description','price','contact','status','mark_as_sold','created_by','photo__file','photo__cover_photo_flag')
+    prodphoto = Product.objects.filter( Q(photo__cover_photo_flag='yes')|Q(photo__file=None),uploaded_by_id=request.user.id).distinct().prefetch_related('photo__set').values('id','name','description','price','contact','status','mark_as_sold','created_by','photo__file','photo__cover_photo_flag')
 
     
     productPagination = createProductPagination(request,prodphoto)
@@ -257,7 +303,10 @@ def markAsSold(request):
     product = Product.objects.get(id=int(mark_as_sold_id))
     if product.mark_as_sold == 0:
        product.mark_as_sold = 1 #making product as sold
-       product.save()   
+       product.save()
+    elif product.mark_as_sold == 1:
+         product.mark_as_sold = 0 #making product as not sold
+         product.save() 
     productPagination = myPostData(request)       
     return render(request,'olx/product/myPostAjax.html',{'productPagination':productPagination})             
 class UpdateProduct(UpdateView):
@@ -278,7 +327,12 @@ class UpdateProduct(UpdateView):
         reference_id = self.kwargs.get(self.pk_url_kwarg)
         context['photo_list'] = Photo.objects.all().filter(reference_id=reference_id,uploaded_by_id=self.request.user.id)
         #If user uploads the photo during edit and by mistake refreshes the page, delete those uploaded photos
-        PhotoTemp.objects.filter(uploaded_by_id=self.request.user.id).delete()
+        photoTemp = PhotoTemp.objects.filter(uploaded_by_id=self.request.user.id)
+        for item in photoTemp:
+          path=item.file.path
+          item.delete()
+          os.remove(path)
+
 
         return context
       
@@ -294,16 +348,21 @@ class UpdateProduct(UpdateView):
           
 
           if  cover_photo_id_edit and '-uploaded' not in cover_photo_id_edit:
-               avl_cover_photo_id = Photo.objects.all().filter(cover_photo_flag='yes',uploaded_by_id=self.request.user.id,reference_id=reference_id)[0]
-               if avl_cover_photo_id.id == int(cover_photo_id_edit):
-                   pass
+               if Photo.objects.all().filter(cover_photo_flag='yes',uploaded_by_id=self.request.user.id,reference_id=reference_id).exists():
+                  avl_cover_photo_id = Photo.objects.all().filter(cover_photo_flag='yes',uploaded_by_id=self.request.user.id,reference_id=reference_id)[0]
+                  if avl_cover_photo_id.id == int(cover_photo_id_edit):
+                      pass
+                  else:
+                      avl_cover_photo_id.cover_photo_flag = 0
+                      avl_cover_photo_id.save()
+                      photo_to_set_cpf = Photo.objects.get(id=int(cover_photo_id_edit))
+                      photo_to_set_cpf.cover_photo_flag='yes'
+                      photo_to_set_cpf.save()
                else:
-                   avl_cover_photo_id.cover_photo_flag = 0
-                   avl_cover_photo_id.save()
-                   photo_to_set_cpf = Photo.objects.get(id=int(cover_photo_id_edit))
-                   photo_to_set_cpf.cover_photo_flag='yes'
-                   photo_to_set_cpf.save()
-                   
+                      photo_to_set_cpf = Photo.objects.get(id=int(cover_photo_id_edit))
+                      photo_to_set_cpf.cover_photo_flag='yes'
+                      photo_to_set_cpf.save()
+                       
                all_photos_from_PhotoTemp = PhotoTemp.objects.all().filter(uploaded_by_id=self.request.user.id).order_by("id")
                if all_photos_from_PhotoTemp.count() >0:
                     product = Product.objects.get(id=reference_id)
@@ -322,9 +381,10 @@ class UpdateProduct(UpdateView):
                      #changing cover photo
                      #get already avl cover_photo
                      if Photo.objects.all().filter(uploaded_by_id=self.request.user.id,reference_id=reference_id).exists():
-                        avl_cover_photo_id = Photo.objects.all().filter(cover_photo_flag='yes',uploaded_by_id=self.request.user.id,reference_id=reference_id)[0]
-                        avl_cover_photo_id.cover_photo_flag = 0
-                        avl_cover_photo_id.save()  
+                        if Photo.objects.all().filter(cover_photo_flag='yes',uploaded_by_id=self.request.user.id,reference_id=reference_id).exists():
+                           avl_cover_photo_id = Photo.objects.all().filter(cover_photo_flag='yes',uploaded_by_id=self.request.user.id,reference_id=reference_id)[0]
+                           avl_cover_photo_id.cover_photo_flag = 0
+                           avl_cover_photo_id.save()  
                      Photo.objects.create(reference_id=product,cover_photo_flag='yes',photo_type=item.photo_type,uploaded_at=item.uploaded_at,file=item.file,uploaded_by_id = item.uploaded_by_id).save()
                   else:
                      Photo.objects.create(reference_id=product,photo_type=item.photo_type,uploaded_at=item.uploaded_at,file=item.file,uploaded_by_id = item.uploaded_by_id).save()
@@ -334,10 +394,27 @@ class UpdateProduct(UpdateView):
           self.object.save()
           #return super().form_valid(form)
           PhotoTemp.objects.filter(uploaded_by_id=self.request.user.id).delete()
+          
           return HttpResponseRedirect(reverse('olx:my_all_post'))
+
+#view for sending email
+def sendEmail(request,product=None ,photoCount=None):
+      plaintext = get_template('olx/product/email.txt')
+      htmly     = get_template('olx/product/email.html')
+      full_name=request.user.first_name+' '+request.user.last_name
+      ctx={'username':full_name,'productId':product.id,'productName':product.name,'productDescription':product.description,'productPrice':product.price,'productOwner':product.contact,'photoCount':photoCount}
+      subject, from_email, to = 'Softvision Olx: New post added ', 'chirag.soni@softvision.com', 'chirag.soni@softvision.com'
+      text_content = plaintext.render(ctx)
+      html_content = htmly.render(ctx)
+      msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+      msg.attach_alternative(html_content, "text/html")
+      msg.send()
 
 def index(request):
     return render(request,'olx/login.html')
+def not_found_page(request):
+    print("inside not_found_page")
+    #return render(request,'pageNotFound.html')  
 def  checkLogin(request):     
             username = request.POST['username']
             password = request.POST['password']

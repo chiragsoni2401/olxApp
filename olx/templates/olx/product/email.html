@@ -1,0 +1,35 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        {% if productId %}
+        <p>Hello {{ username }}  </br> The Product ad has been posted successfully with following details:</p>
+        <table>
+            <tbody>
+                <tr><td><strong>product Id:</strong> </td><td>{{productId}}</td></tr>
+                
+                <tr><td><strong>Product Name:</strong></td><td>{{productName}}</td></tr>
+                <tr><td><strong>Product Description:</strong></td><td>{{productDescription}}</td></tr>
+                <tr><td><strong>Product Price:</strong></td><td>{{productPrice}}</td></tr>
+                <tr><td><strong>No. of photos uploaded:</strong></td><td>{{photoCount}}</td></tr>
+
+                <tr><td><strong>Product Owner Contact:</strong></td><td>{{productOwner}}</td></tr>
+            </tbody>
+        </table>
+        {% else %}
+        <h3>Product Edited successfully with following details:</h3>
+        <table>
+            <tbody>
+                <td>Product Id:</td><td>{{productId}}</td>
+                <td>Product Name:</td><td>{{productName}}</td>
+                <td>Product Description:</td><td>{{productDescription}}</td>
+                <td>Product Price:</td><td>{{productPrice}}</td>
+                <td>Total product photos:</td><td>{{photoCount}}</td>
+
+                <td>Product Owner Contact:</td><td>{{productOwner}}</td>
+            </tbody>
+        </table>
+        {% endif %}
+    </body>
+</html>

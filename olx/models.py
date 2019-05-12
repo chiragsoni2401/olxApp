@@ -5,6 +5,7 @@
 from django.db import models
 #from django.core.urlresolvers import reverse
 from django.urls import reverse
+from django.dispatch import receiver
 
 # Create your models here.
 class Category(models.Model):
@@ -74,6 +75,8 @@ class Photo(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
     uploaded_by_id = models.IntegerField(default=0)
     status = models.IntegerField(default=0) # 0-->Active,1-->Inactive
+
+    
 
     class Meta:
         ordering = ('-uploaded_at',)

@@ -19,8 +19,10 @@ from . import views
 from django.urls import path
 
 app_name = 'olx'
+
 urlpatterns = [
      path('',views.index, name='login_page'),
+     #path('<slug>/',views.not_found_page, name='not_found_page'),
      path('login/',views.checkLogin, name='from_login_page'),
      path('logout/',views.logoutFromApp, name='logout_from_app'),
      path('productList',views.product_list, name='product_list'),
@@ -41,3 +43,5 @@ urlpatterns = [
 
 
 ]
+
+

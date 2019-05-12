@@ -120,8 +120,7 @@
     
         </script>
 </head>
-<body onbeforeunload="HandleBackFunctionality()">
-
+<body>
    <!-- nav bar from here-->
    <!--<nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -165,11 +164,11 @@
               <!--<li class="nav-item">
                 <a class="nav-link" href="{% url "olx:logout_from_app" %}">Logout</a>
               </li>-->
-              <li class="nav-item">
+             <!-- <li class="nav-item">
                 <a class="nav-link" href="#">Services</a>
-              </li>
+              </li>-->
               <li class="nav-item">
-                <a class="nav-link" id="contact" href="#">Contact</a>
+                <a class="nav-link" id="contact" href="#">Contact Admin</a>
               </li>&nbsp;&nbsp;
               
              
@@ -198,11 +197,12 @@
                                             </p>
                                         </div>
                                         <div class="col-lg-8">
+                                                <p class="text-left">
+                                                        <p class="btn-primary btn-block btn-sm" style="text-align: center;font-size: 15px;">Profile</p>
+                                                    </p>
                                             <p class="text-left"><strong>{{request.user.first_name}} {{request.user.last_name }}</strong></p>
                                             <p class="text-left small">{{request.user.username}}@softvision.com</p>
-                                            <p class="text-left">
-                                                <a href="#" class="btn btn-primary btn-block btn-sm">Profile</a>
-                                            </p>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -225,7 +225,7 @@
       </nav>
     
             
-      
+      <h2 style="margin-left:160px;">Products</h2> 
 <div class="container">
         
     <div class="row">
