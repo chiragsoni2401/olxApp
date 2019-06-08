@@ -14,9 +14,9 @@ class MyLdapAuth:
        
         if MyLdapAuth.verifyLogin(username, password) != 'success':
             list=username.split('.')
-            response = url.urlopen("https://project.softvision.com/operaservice/api/employee?key=mvk4s5jfcUi948EbtAY7Ag&email="+str(list[0])+"."+str(list[1]))
-            jsonData = json.load(response)
-            print(jsonData)
+            #response = url.urlopen("url for getting the softvision employee data")
+            #jsonData = json.load(response)
+            #print(jsonData)
             try:
                 user = User.objects.get(username=username)
                 #user.last_login=
@@ -52,7 +52,7 @@ class MyLdapAuth:
         # Adapt to your needs
         """
 
-       LDAP_SERVER = 'LDAP://10.100.1.100:389'
+       LDAP_SERVER = 'xxx'
        # fully qualified AD user name
        LDAP_USERNAME = '%s@spi.com' % username
        # your password
